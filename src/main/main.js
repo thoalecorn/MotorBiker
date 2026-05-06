@@ -1,10 +1,13 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const { initDB } = require('./database');
-const { registerCajaHandlers } = require('./ipc/caja'); 
+const { initDB }                  = require('./database');
+const { registerCajaHandlers }    = require('./ipc/caja');
 const { registerProductosHandlers } = require('./ipc/productos');
 const { registerServiciosHandlers } = require('./ipc/servicios');
 const { registerOrdenesHandlers } = require('./ipc/ordenes');
+const { registerGastosHandlers }  = require('./ipc/gastos');
+const { registerFacturasHandlers } = require('./ipc/facturas');
+const { registerClientesHandlers } = require('./ipc/clientes');
 
 let mainWindow;
 
@@ -16,38 +19,33 @@ function createWindow() {
     minHeight: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true, 
-      nodeIntegration: false,   
+      contextIsolation: true,
+      nodeIntegration: false,
     },
-    show: false, 
+    show: false,
   });
 
   mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
 
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show();
-  });
+  mainWindow.once('ready-to-show', () => mainWindow.show());
 }
-
-app.whenReady().then(() => {
-  initDB();        
-  createWindow();  
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
-});
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
-});
-
 
 app.whenReady().then(() => {
   initDB();
   registerCajaHandlers();
   registerProductosHandlers();
   registerServiciosHandlers();
-  registerOrdenesHandlers();  
+  registerOrdenesHandlers();
+  registerGastosHandlers();
+  registerFacturasHandlers();
+  registerClientesHandlers();
   createWindow();
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });

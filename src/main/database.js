@@ -71,14 +71,14 @@ function createTables() {
     CREATE TABLE IF NOT EXISTS ordenes (
       id               INTEGER PRIMARY KEY AUTOINCREMENT,
       cliente_id       INTEGER REFERENCES clientes(id),
-      cliente_nombre   TEXT    NOT NULL,  -- snapshot por si el cliente no está registrado
+      cliente_nombre   TEXT    NOT NULL,  
       descripcion      TEXT,
-      tipo             TEXT    DEFAULT 'directa', -- 'directa' | 'taller'
-      estado           TEXT    DEFAULT 'pendiente', -- 'pendiente' | 'en_proceso' | 'terminado' | 'pagado' | 'cancelado'
+      tipo             TEXT    DEFAULT 'directa', 
+      estado           TEXT    DEFAULT 'pendiente', 
       total_productos  REAL    DEFAULT 0,
       total_mano_obra  REAL    DEFAULT 0,
       total            REAL    DEFAULT 0,
-      metodo_pago      TEXT,  -- 'efectivo' | 'transferencia' | 'credito' — se llena al pagar
+      metodo_pago      TEXT, 
       caja_id          INTEGER REFERENCES cierres_caja(id),
       created_at       TEXT    DEFAULT (datetime('now', 'localtime')),
       updated_at       TEXT    DEFAULT (datetime('now', 'localtime'))
@@ -87,10 +87,10 @@ function createTables() {
     CREATE TABLE IF NOT EXISTS orden_items (
       id              INTEGER PRIMARY KEY AUTOINCREMENT,
       orden_id        INTEGER NOT NULL REFERENCES ordenes(id) ON DELETE CASCADE,
-      tipo_item       TEXT    NOT NULL, -- 'producto' | 'servicio'
-      referencia_id   INTEGER,          -- id del producto o servicio original
-      nombre          TEXT    NOT NULL, -- snapshot del nombre al momento de crear
-      precio_unitario REAL    NOT NULL, -- snapshot del precio al momento de crear
+      tipo_item       TEXT    NOT NULL, 
+      referencia_id   INTEGER,          
+      nombre          TEXT    NOT NULL, 
+      precio_unitario REAL    NOT NULL, 
       cantidad        INTEGER DEFAULT 1,
       subtotal        REAL    NOT NULL
     );
@@ -111,10 +111,10 @@ function createTables() {
     CREATE TABLE IF NOT EXISTS venta_items (
       id              INTEGER PRIMARY KEY AUTOINCREMENT,
       venta_id        INTEGER NOT NULL REFERENCES ventas(id) ON DELETE CASCADE,
-      tipo_item       TEXT    NOT NULL, -- 'producto' | 'servicio'
+      tipo_item       TEXT    NOT NULL, 
       referencia_id   INTEGER,
-      nombre          TEXT    NOT NULL, -- snapshot
-      precio_unitario REAL    NOT NULL, -- snapshot
+      nombre          TEXT    NOT NULL, 
+      precio_unitario REAL    NOT NULL, 
       cantidad        INTEGER DEFAULT 1,
       subtotal        REAL    NOT NULL
     );
@@ -135,7 +135,7 @@ function createTables() {
       monto            REAL NOT NULL,
       fecha_emision    TEXT NOT NULL,
       fecha_vencimiento TEXT NOT NULL,
-      estado           TEXT DEFAULT 'pendiente', -- 'pendiente' | 'pagada'
+      estado           TEXT DEFAULT 'pendiente',
       created_at       TEXT DEFAULT (datetime('now', 'localtime'))
     );
 
@@ -145,7 +145,6 @@ function createTables() {
 function createViews() {
   db.exec(`
 
-    -- Cuaderno de Ventas: solo ítems de tipo producto
     DROP VIEW IF EXISTS cuaderno_ventas;
     CREATE VIEW cuaderno_ventas AS
       SELECT
@@ -161,8 +160,7 @@ function createViews() {
       FROM venta_items vi
       JOIN ventas v ON v.id = vi.venta_id
       WHERE vi.tipo_item = 'producto';
-
-    -- Cuaderno de Taller: solo ítems de tipo servicio
+      
     DROP VIEW IF EXISTS cuaderno_taller;
     CREATE VIEW cuaderno_taller AS
       SELECT

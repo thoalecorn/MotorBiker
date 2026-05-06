@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { initDB } = require('./database');
+const { registerCajaHandlers } = require('./ipc/caja'); 
 
 let mainWindow;
 
@@ -36,4 +37,10 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
+});
+
+app.whenReady().then(() => {
+  initDB();
+  registerCajaHandlers();  
+  createWindow();
 });

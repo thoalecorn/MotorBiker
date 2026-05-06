@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { initDB } = require('./database');
 const { registerCajaHandlers } = require('./ipc/caja'); 
+const { registerProductosHandlers } = require('./ipc/productos');
 
 let mainWindow;
 
@@ -42,5 +43,12 @@ app.on('window-all-closed', () => {
 app.whenReady().then(() => {
   initDB();
   registerCajaHandlers();  
+  createWindow();
+});
+
+app.whenReady().then(() => {
+  initDB();
+  registerCajaHandlers();
+  registerProductosHandlers(); 
   createWindow();
 });

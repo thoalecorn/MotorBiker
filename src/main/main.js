@@ -3,6 +3,7 @@ const path = require('path');
 const { initDB } = require('./database');
 const { registerCajaHandlers } = require('./ipc/caja'); 
 const { registerProductosHandlers } = require('./ipc/productos');
+const { registerServiciosHandlers } = require('./ipc/servicios');
 
 let mainWindow;
 
@@ -50,5 +51,13 @@ app.whenReady().then(() => {
   initDB();
   registerCajaHandlers();
   registerProductosHandlers(); 
+  createWindow();
+});
+
+app.whenReady().then(() => {
+  initDB();
+  registerCajaHandlers();
+  registerProductosHandlers();
+  registerServiciosHandlers();  
   createWindow();
 });

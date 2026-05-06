@@ -4,6 +4,7 @@ const { initDB } = require('./database');
 const { registerCajaHandlers } = require('./ipc/caja'); 
 const { registerProductosHandlers } = require('./ipc/productos');
 const { registerServiciosHandlers } = require('./ipc/servicios');
+const { registerOrdenesHandlers } = require('./ipc/ordenes');
 
 let mainWindow;
 
@@ -41,23 +42,12 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-app.whenReady().then(() => {
-  initDB();
-  registerCajaHandlers();  
-  createWindow();
-});
-
-app.whenReady().then(() => {
-  initDB();
-  registerCajaHandlers();
-  registerProductosHandlers(); 
-  createWindow();
-});
 
 app.whenReady().then(() => {
   initDB();
   registerCajaHandlers();
   registerProductosHandlers();
-  registerServiciosHandlers();  
+  registerServiciosHandlers();
+  registerOrdenesHandlers();  
   createWindow();
 });
